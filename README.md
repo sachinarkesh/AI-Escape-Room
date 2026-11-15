@@ -29,10 +29,13 @@ cp .env.example .env                                   # then put your free key 
 ```
 ## Run
 ```bash
-streamlit run v1/app.py     # Version 1
-streamlit run v2/app.py     # Version 2 (works offline without a key, using a keyword parser)
+streamlit run app.py        # both versions on one page; switch in the sidebar (switching starts a fresh game)
+streamlit run v1/app.py     # Version 1 only
+streamlit run v2/app.py     # Version 2 only (works offline without a key, using a keyword parser)
 pytest -q                   # V2 engine tests, no API key needed
 ```
+Deploy on Streamlit Community Cloud with **Main file path: `app.py`** and your `GEMINI_API_KEY` in the app Secrets.
+
 ## Solution (spoiler)
 <details><summary>Show</summary>
 Torch on desk -> use on painting (".. ends with 58"); bookshelf digits 4-1-7-2 -> drawer; take brass key, note says "starts with 60";
