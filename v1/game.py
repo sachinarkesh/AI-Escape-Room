@@ -3,11 +3,14 @@ The LLM is the Game Master AND the rule keeper: the whole room, the secret codes
 rules live in one system prompt. Memory = the chat history we resend every turn.
 """
 import os
+import sys
 import streamlit as st
 from dotenv import load_dotenv
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from gemini_util import generate, get_client  # noqa: E402
+
 load_dotenv()
-MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 SYSTEM_PROMPT = """You are the Game Master of a text escape room called "The Locked Library".
 The player woke up locked in a library. Stay in character, answer in 2-4 vivid sentences.
@@ -32,14 +35,14 @@ def reset():
 
 
 def ask_llm(history):
-    from google import genai
     from google.genai import types
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    client = get_client()
+    if client is None:
+        return "(No GEMINI_API_KEY set. Add it to .env or the Streamlit Secrets.)"
     contents = [types.Content(role=m["role"], parts=[types.Part(text=m["text"])]) for m in history]
-    resp = client.models.generate_content(
-        model=MODEL, contents=contents,
-        config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT, temperature=0.8))
-    return resp.text
+    resp = generate(client, contents,
+                    types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT, temperature=0.8))
+    return resp.text or "(The Game Master stays silent. Try again.)"
 
 
 def render():

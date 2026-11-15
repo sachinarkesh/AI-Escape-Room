@@ -4,18 +4,16 @@ a rule-based parser and plain facts so the game (and tests) still work offline."
 import json
 import os
 import re
-from engine import ACTIONS
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from engine import ACTIONS  # noqa: E402
+from gemini_util import generate, get_client  # noqa: E402
 from game_data import ROOM
 
-MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 
 def _client():
-    key = os.getenv("GEMINI_API_KEY")
-    if not key:
-        return None
-    from google import genai
-    return genai.Client(api_key=key)
+    return get_client()
 
 
 def parser_prompt():
@@ -77,10 +75,9 @@ def parse_intent(text):
         return rule_parse(text)
     try:
         from google.genai import types
-        r = client.models.generate_content(
-            model=MODEL, contents=f"Player message: <<<{text}>>>",
-            config=types.GenerateContentConfig(system_instruction=parser_prompt(), temperature=0,
-                                               response_mime_type="application/json"))
+        r = generate(client, f"Player message: <<<{text}>>>",
+                     types.GenerateContentConfig(system_instruction=parser_prompt(), temperature=0,
+                                                 response_mime_type="application/json"))
         data = json.loads(r.text)
         if not isinstance(data, dict) or data.get("action") not in ACTIONS:
             return {"action": "other"}
@@ -96,10 +93,9 @@ def narrate(player_text, result):
         return facts
     try:
         from google.genai import types
-        r = client.models.generate_content(
-            model=MODEL,
-            contents=f"Action succeeded: {result['ok']}\nFACTS: {facts}\nPlayer message: <<<{player_text}>>>",
-            config=types.GenerateContentConfig(system_instruction=narrator_prompt(), temperature=0.7))
+        r = generate(client,
+                     f"Action succeeded: {result['ok']}\nFACTS: {facts}\nPlayer message: <<<{player_text}>>>",
+                     types.GenerateContentConfig(system_instruction=narrator_prompt(), temperature=0.7))
         return r.text or facts
     except Exception:
         return facts
