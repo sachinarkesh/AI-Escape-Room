@@ -7,7 +7,7 @@ import re
 from engine import ACTIONS
 from game_data import ROOM
 
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 
 def _client():

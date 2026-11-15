@@ -7,7 +7,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv()
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 SYSTEM_PROMPT = """You are the Game Master of a text escape room called "The Locked Library".
 The player woke up locked in a library. Stay in character, answer in 2-4 vivid sentences.
