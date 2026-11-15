@@ -68,3 +68,21 @@ def test_full_playthrough():
 def test_rule_parser_basics():
     assert llm.rule_parse("grab the key")["action"] == "take"
     assert llm.rule_parse("try 4172 on the drawer") == {"action": "enter_code", "target": "drawer", "item": None, "code": "4172"}
+
+
+def test_model_fallback_on_404(monkeypatch):
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    import gemini_util
+    monkeypatch.setattr(gemini_util, "PRIMARY", "old-model")
+    monkeypatch.setattr(gemini_util, "FALLBACKS", ["new-model"])
+    calls = []
+
+    class C:
+        class models:
+            @staticmethod
+            def generate_content(model, contents, config):
+                calls.append(model)
+                if model == "old-model":
+                    raise RuntimeError("404 NOT_FOUND")
+                return "ok"
+    assert gemini_util.generate(C, "hi", None) == "ok" and calls == ["old-model", "new-model"]
