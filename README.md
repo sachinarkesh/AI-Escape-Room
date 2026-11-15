@@ -36,6 +36,8 @@ pytest -q                   # V2 engine tests, no API key needed
 ```
 Deploy on Streamlit Community Cloud with **Main file path: `app.py`** and your `GEMINI_API_KEY` in the app Secrets.
 
+**Model settings:** `GEMINI_MODEL` (default `gemini-3.5-flash`) and optional `GEMINI_FALLBACK_MODELS` are tried in order if a model returns 404 (see `gemini_util.py`).
+
 ## Solution (spoiler)
 <details><summary>Show</summary>
 Torch on desk -> use on painting (".. ends with 58"); bookshelf digits 4-1-7-2 -> drawer; take brass key, note says "starts with 60";
