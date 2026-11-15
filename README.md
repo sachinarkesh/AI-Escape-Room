@@ -1,5 +1,7 @@
 # AI-Escape-Room
 
+**Live demo:** https://ai-escape-room-dusrspw3ywwqfrnghdekpu.streamlit.app/ (both versions on one page, switch in the sidebar; the app may need a click to wake up)
+
 An interactive escape-room game where an LLM (Google Gemini) is the Game Master. Built in two versions to show why
 LLM-only game logic is unreliable and how a structured game state with Python-side validation fixes it.
 
@@ -52,3 +54,8 @@ Seven adversarial/consistency cases with V1-vs-V2 behaviour: [`docs/TEST_CASES.m
 
 ## Security
 API keys are read from environment variables (`.env`, git-ignored). Never commit `.env`.
+
+## License
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, copy and modify this project for
+personal, educational, research and other **noncommercial** purposes. **Commercial use is not permitted.**
+Note: this is a source-available license, not an OSI "open source" license.
